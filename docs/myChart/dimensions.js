@@ -1,22 +1,20 @@
 export const dimensions = [
   {
-    id: 'x',
-    name: 'x axis',
+    id: 'start',
+    name: 'Start Date',
+    validTypes: ['date'],
+    required: true,
+  },
+  {
+    id: 'duration',
+    name: 'Duration (days)',
     validTypes: ['number'],
     required: true,
   },
-
   {
-    id: 'y',
-    name: 'y axis',
-    validTypes: ['number'],
+    id: 'category',
+    name: 'Category',
+    validTypes: ['string'],
     required: true,
-  },
-
-  {
-    id: 'color',
-    name: 'Color',
-    validTypes: ['number', 'date', 'string'],
-    required: false,
   },
 ]
