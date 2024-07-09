@@ -1,75 +1,18 @@
 import * as d3 from 'd3'
-import { legend } from '@rawgraphs/rawgraphs-core'
-import '../d3-styles.js'
 
-export function render(
-  node,
-  data,
-  visualOptions,
-  mapping,
-  originalData,
-  styles
-) {
-  // destructurate visual visualOptions
-  const {
-    // default options
-    width,
-    height,
-    background,
-    dotsRadius,
-    colorScale,
-    // add below other options defined in visualOptions.js
-  } = visualOptions
+export function render(node, data, visualOptions) {
+  const { width, height, background } = visualOptions
+  const svg = d3.select(node).attr('width', width).attr('height', height).style('background', background)
 
-  // select the SVG element
-  const svg = d3.select(node)
+  const xScale = d3.scaleTime().domain(d3.extent(data, d => d.start)).range([0, width])
+  const yScale = d3.scaleBand().domain(data.map(d => d.category)).range([0, height]).padding(0.1)
 
-  svg
-    .append('rect')
-    .attr('width', width)
-    .attr('height', height)
-    .attr('fill', background)
-
-  let xScale = d3
-    .scaleLinear()
-    .domain(d3.extent(data, (d) => d.x))
-    .rangeRound([0, width])
-    .nice()
-
-  let yScale = d3
-    .scaleLinear()
-    .domain(d3.extent(data, (d) => d.y))
-    .rangeRound([height, 0])
-    .nice()
-
-  svg
-    .selectAll('circle')
+  svg.selectAll('rect')
     .data(data)
-    .join('circle')
-    .attr('cx', (d) => xScale(d.x))
-    .attr('cy', (d) => yScale(d.y))
-    .attr('r', dotsRadius)
-    .attr('fill', (d) => colorScale(d.color))
-
-  svg
-    .append('text')
-    .attr('x', 10)
-    .attr('y', 20)
-    .text('My chart')
-    .styles(styles.seriesLabel)
-  //
-  const legendLayer = svg
-    .append('g')
-    .attr('id', 'legend')
-    .attr('transform', `translate(${10},${40})`)
-
-  // if color is mapped, create the legend
-  if (mapping.color.value) {
-    // create the legend object
-    const chartLegend = legend().legendWidth(200)
-    //add color to the legend
-    chartLegend.addColor(mapping.color.value, colorScale)
-    // render the legend
-    legendLayer.call(chartLegend)
-  }
+    .enter().append('rect')
+    .attr('x', d => xScale(d.start))
+    .attr('y', d => yScale(d.category))
+    .attr('width', d => xScale(d.start) + d.duration * 24 * 60 * 60 * 1000 - xScale(d.start))
+    .attr('height', yScale.bandwidth())
+    .attr('fill', 'steelblue')
 }
