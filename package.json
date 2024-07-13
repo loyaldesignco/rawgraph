@@ -7,7 +7,6 @@
   "main": "lib/index.cjs.js",
   "module": "lib/index.es.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write src",
     "sandbox": "webpack-dev-server",
     "prebuild": "rimraf lib",
