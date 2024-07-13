@@ -1,32 +1,32 @@
-import replace from '@rollup/plugin-replace'
-import babel from '@rollup/plugin-babel'
-import { terser } from 'rollup-plugin-terser'
-import localResolve from 'rollup-plugin-local-resolve'
-import commonjs from '@rollup/plugin-commonjs'
-import resolve from '@rollup/plugin-node-resolve'
-import image from '@rollup/plugin-image'
-import { string } from 'rollup-plugin-string'
-import { rawGraphCss } from './bundler/rollupPluginRAWGraphCss'
-import pkg from './package.json'
+import replace from '@rollup/plugin-replace';
+import babel from '@rollup/plugin-babel';
+import { terser } from 'rollup-plugin-terser';
+import localResolve from 'rollup-plugin-local-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import image from '@rollup/plugin-image';
+import { string } from 'rollup-plugin-string';
+import { rawGraphCss } from './bundler/rollupPluginRAWGraphCss';
+import pkg from './package.json';
 
 const vendors = []
   // Make all external dependencies to be exclude from rollup
   .concat(
-    Object.keys(pkg.dependencies || {}), // TODO: keep or not?
+    Object.keys(pkg.dependencies || {}),
     Object.keys(pkg.peerDependencies || {}),
     Object.keys(pkg.devDependencies || {})
   )
-  .concat('./styles/base.css')
+  .concat('./styles/base.css');
 
-const GlobalVendors = ['d3', '@rawgraphs/rawgraphs-core']
+const GlobalVendors = ['d3', '@rawgraphs/rawgraphs-core'];
 
 const makeExternalPredicate = (externalArr) => {
   if (externalArr.length === 0) {
-    return () => false
+    return () => false;
   }
-  const pattern = new RegExp(`^(${externalArr.join('|')})($|/)`)
-  return (id) => pattern.test(id)
-}
+  const pattern = new RegExp(`^(${externalArr.join('|')})($|/)`);
+  return (id) => pattern.test(id);
+};
 
 export default ['esm', 'cjs', 'umd'].map((format) => ({
   input: {
@@ -74,4 +74,4 @@ export default ['esm', 'cjs', 'umd'].map((format) => ({
         ]
       : []
   ),
-}))
+}));
